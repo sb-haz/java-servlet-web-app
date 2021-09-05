@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+
+	<jsp:directive.page contentType="text/html" pageEncoding="UTF-8" />
+
+	<jsp:element name="html">
+        <jsp:attribute name="lang">EN</jsp:attribute>
+        
+        <jsp:element name="link" rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"></jsp:element>
+        
+        <jsp:body>
+        	<div class="container">
+        	<br></br>
+        	<jsp:include page="navigation.jspx" />
+        	<br></br>
+            <h1>My Lesson Plan.</h1>
+            <p>Greetings, ${user}</p>
+            <br></br>
+            
+            <table class="table">
+                <tr>
+                    <th>Description</th>
+						<th>Date</th>
+						<th>Start time</th>
+						<th>End time</th>
+						<th>Level</th>
+                </tr>
+                
+                <!--  Loop through users LessonSelection saved in their session -->
+                <c:forEach var="entry" items="${sessionLessons.items}">
+                
+                    <form method="POST" action="removeLesson">
+                        <tr>
+                        
+                            <td><c:out value="${entry.value.description}"/></td>
+                            <td><c:out value="${entry.value.date}"/></td>
+                            <td><c:out value="${entry.value.startTime}"/></td>
+                            <td><c:out value="${entry.value.endTime}"/></td>
+                            <td><c:out value="${entry.value.level}"/></td>
+                            
+                            <!-- Remove selection button with lessonid (entry.key) added to request -->
+                            <td><input type="hidden" name="ID" value="${entry.key}"/></td>
+                            <td><input type="submit" value="Remove Lesson" class="btn btn-danger"/></td>
+                        </tr>
+                    </form>
+                    
+                </c:forEach>
+                
+            </table>
+            <jsp:include page="footer.jspx" />
+            </div>
+        </jsp:body>
+    </jsp:element>
+
+</jsp:root>

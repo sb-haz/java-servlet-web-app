@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+
+	<jsp:directive.page contentType="text/html" pageEncoding="UTF-8" />
+
+	<jsp:element name="html">
+        <jsp:attribute name="lang">EN</jsp:attribute>
+        
+        <jsp:element name="link" rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"></jsp:element>
+        
+        <jsp:body>
+        	<div class="container">
+        	<br></br>
+        	<jsp:include page="navigation.jspx" />
+        	<br></br>
+            <h1>Timetable of Free Lessons.</h1>
+            <p>Greetings, ${user}</p>
+            <br></br>
+            
+            <!--  Use LessonTimetable class as bean -->
+            <jsp:useBean class="model.LessonTimetable" id="lessons" scope="page" />
+            
+            <table class="table">
+                <tr>
+                    <th>Description</th>
+						<th>Date</th>
+						<th>Start time</th>
+						<th>End time</th>
+						<th>Level</th>
+                </tr>
+                
+                <!--  Loop through availableLessons which is a LessonTimetable object -->
+                <!--  Loops through each lesson and displays data on a table -->
+                <c:forEach var="entry" items="${availableLessons.lessons}">
+                
+                    <form method="POST" action="chooseLesson">
+                        <tr>
+                        
+                            <td><c:out value="${entry.value.description}"/></td>
+                            <td><c:out value="${entry.value.date}"/></td>
+                            <td><c:out value="${entry.value.startTime}"/></td>
+                            <td><c:out value="${entry.value.endTime}"/></td>
+                            <td><c:out value="${entry.value.level}"/></td>
+                            
+                            <td><input type="hidden" name="ID" value="${entry.key}"/></td>
+                            
+                            <c:choose>
+                            
+                            	<!--  If statement, 3 or more lessons have been selected, show inactive button -->
+								<c:when test="${sessionLessons.getNumChosen() >= 3}">
+								
+									<td><input type="button" value="3 Lesson Limit" class="btn btn-light"/></td>
+							
+								</c:when>
+								
+								<!--  Else statement, Less than 3 buttons selected -->
+								<c:otherwise>
+									<c:choose>
+										
+										<!--  Check if lesson hasn't already been selected -->
+										<!--  I.e. not found in lessonSelection object -->
+										<c:when test="${sessionLessons.getLesson(entry.key) == null}">
+											<td><input type="submit" value="Select Lesson" class="btn btn-primary"/></td>
+										
+										</c:when>
+										
+										<!--  Else if, already selected (found in lessonSelection object) -->
+										<c:otherwise>
+										
+											<td><input type="button" value="Been Selected" class="btn light"/></td>
+										
+										</c:otherwise>
+									</c:choose>
+									
+								</c:otherwise>
+							</c:choose>
+                        </tr>
+                    </form>
+                    
+                </c:forEach>
+                
+            </table>
+            </div>
+        </jsp:body>
+    </jsp:element>
+
+</jsp:root>
